@@ -61,12 +61,16 @@ public class gpa extends JFrame{
 	public class GraphDrawer extends JPanel{
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			g.fillRect(50, 0, 100, 100);
+			int width = this.getWidth();
+			int height = this.getHeight();
+			g.fillRect(0, 0, width, height);
 		}
 	}
 
 	//----------------Structure----------------
-	/*Sets default weights according to UC Berkeley's grading scale
+
+	/*
+	Sets default weights according to UC Berkeley's grading scale
 	weights[0] = 0.0 (F)
 	weights[1] = 0.7 (D-)
 	...
@@ -118,18 +122,13 @@ public class gpa extends JFrame{
 		left.setPreferredSize(new Dimension(400, 750));
 		left_top.setPreferredSize(new Dimension(400,50));
 		left_middle.setPreferredSize(new Dimension(400,400));
-		left_bottom.setPreferredSize(new Dimension(400, 350));
+		left_bottom.setPreferredSize(new Dimension(400,350));
 		right_top.setPreferredSize(new Dimension(200, 700));
 		right_bottom.setPreferredSize(new Dimension(200, 50));
 
 		right.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		left.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		/*
-		right_top.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		right_bottom.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		left_top.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		left_middle.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		*/left_bottom.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		left_bottom.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		
 
 		all.add(top);
@@ -163,8 +162,8 @@ public class gpa extends JFrame{
 		rb12 = new JRadioButton("A+");
 		gpa_l = new JLabel("GPA:");
 		add_class = new JLabel("Add Class");
-		grade_l = new JLabel("Grade");
-		units = new JLabel("Units");
+		grade_l = new JLabel("Grade: ");
+		units = new JLabel("Units: ");
 		grade_dis = new JLabel("Grade Distribution");
 		weights_l = new JLabel("Weights");
 		tf0 = new JTextField("0.0");
@@ -268,6 +267,7 @@ public class gpa extends JFrame{
 		left_top.add(add_class);
 		left_middle.add(grade_l);
 
+		//Creating button group for radio buttons
 		rb_bg = new ButtonGroup();
 		rb_bg.add(rb12);
 		rb_bg.add(rb11);
@@ -283,14 +283,23 @@ public class gpa extends JFrame{
 		rb_bg.add(rb1);
 		rb_bg.add(rb0);
 
+		//Placing radio buttons in four separate JPanels
 		grade_jp1 = new JPanel();
 		grade_jp1.setLayout(new BoxLayout(grade_jp1, BoxLayout.X_AXIS));
+		grade_jp1.setMaximumSize(new Dimension(400, 100));
+
 		grade_jp2 = new JPanel();
+		grade_jp2.setMaximumSize(new Dimension(400, 100));
 		grade_jp2.setLayout(new BoxLayout(grade_jp2, BoxLayout.X_AXIS));
+
 		grade_jp3 = new JPanel();
+		grade_jp3.setMaximumSize(new Dimension(400, 100));
 		grade_jp3.setLayout(new BoxLayout(grade_jp3, BoxLayout.X_AXIS));
+
 		grade_jp4 = new JPanel();
+		grade_jp4.setMaximumSize(new Dimension(400, 100));
 		grade_jp4.setLayout(new BoxLayout(grade_jp4, BoxLayout.X_AXIS));
+
 		grade_jp1.add(rb12);
 		grade_jp1.add(rb11);
 		grade_jp1.add(rb10);
@@ -310,12 +319,15 @@ public class gpa extends JFrame{
 		left_middle.add(grade_jp3);
 		left_middle.add(grade_jp4);
 
+		//Separate JPanel for units input
 		units_jp = new JPanel();
 		units_jp.setLayout(new BoxLayout(units_jp, BoxLayout.X_AXIS));
+		unit_entry.setMaximumSize(new Dimension(50,50));
 		units_jp.add(units);
 		units_jp.add(unit_entry);
 		left_middle.add(units_jp);
 
+		//Separate JPanel for buttons
 		buttons_jp = new JPanel();
 		buttons_jp.setLayout(new BoxLayout(buttons_jp, BoxLayout.X_AXIS));
 		buttons_jp.add(add);
@@ -401,8 +413,12 @@ public class gpa extends JFrame{
 	}
 
 	private void undoClass() {
-		grades.pop();
-		updateGrades();
+		try {
+			grades.pop();
+			updateGrades();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Nothing to undo", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void resetClass() {
@@ -429,6 +445,7 @@ public class gpa extends JFrame{
 			weights[10] = Double.parseDouble(tf10.getText());
 			weights[11] = Double.parseDouble(tf11.getText());
 			weights[12] = Double.parseDouble(tf12.getText());
+			updateGrades();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
 		}
